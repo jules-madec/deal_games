@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Announcement index{% endblock %}
+
+{% block body %}
+    <h1>Announcement index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tittitle</th>
+                <th>Description</th>
+                <th>PublicationDate</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for announcement in announcements %}
+            <tr>
+                <td>{{ announcement.id }}</td>
+                <td>{{ announcement.tittitle }}</td>
+                <td>{{ announcement.description }}</td>
+                <td>{{ announcement.publicationDate ? announcement.publicationDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_announcement_show', {'id': announcement.id}) }}">show</a>
+                    <a href="{{ path('app_announcement_edit', {'id': announcement.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_announcement_new') }}">Create new</a>
+{% endblock %}

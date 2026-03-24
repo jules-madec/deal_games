@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Announcement{% endblock %}
+
+{% block body %}
+    <h1>Announcement</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ announcement.id }}</td>
+            </tr>
+            <tr>
+                <th>Tittitle</th>
+                <td>{{ announcement.tittitle }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ announcement.description }}</td>
+            </tr>
+            <tr>
+                <th>PublicationDate</th>
+                <td>{{ announcement.publicationDate ? announcement.publicationDate|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_announcement_index') }}">back to list</a>
+
+    <a href="{{ path('app_announcement_edit', {'id': announcement.id}) }}">edit</a>
+
+    {{ include('announcement/_delete_form.html.twig') }}
+{% endblock %}
