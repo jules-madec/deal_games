@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Announcement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Form\AnnouncementType;
 use App\Repository\AnnouncementRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,10 +23,12 @@ final class AnnouncementController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_announcement_new', methods: ['GET', 'POST'])]
+    #[IsGranted("IS_AUTHENTICATED_FULLY")]
+    #[Route("/announcement/new", name: "app_announcement_new", methods: ["GET", "POST"])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $announcement = new Announcement();
+        $announcement->setUser($this->getUser());
         $form = $this->createForm(AnnouncementType::class, $announcement);
         $form->handleRequest($request);
 
@@ -66,6 +69,18 @@ final class AnnouncementController extends AbstractController
             'announcement' => $announcement,
             'form' => $form,
         ]);
+    }
+
+    // ✅ Nouvelle route publish
+    #[Route('/{id}/publish', name: 'app_announcement_publish', methods: ['POST'])]
+    public function publish(Request $request, Announcement $announcement, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('publish' . $announcement->getId(), $request->getPayload()->getString('_token'))) {
+            $announcement->setIsPublished(!$announcement->isPublished());
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_announcement_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'app_announcement_delete', methods: ['POST'])]

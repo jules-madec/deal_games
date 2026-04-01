@@ -23,6 +23,10 @@ class Announcement
     #[ORM\Column]
     private ?\DateTime $publicationDate = null;
 
+    // ✅ Nouveau champ
+    #[ORM\Column(type: 'boolean')]
+    private bool $isPublished = false;
+
     #[ORM\ManyToOne(inversedBy: 'announcements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -44,7 +48,6 @@ class Announcement
     public function setTittitle(string $tittitle): static
     {
         $this->tittitle = $tittitle;
-
         return $this;
     }
 
@@ -56,7 +59,6 @@ class Announcement
     public function setDescription(string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -68,7 +70,18 @@ class Announcement
     public function setPublicationDate(\DateTime $publicationDate): static
     {
         $this->publicationDate = $publicationDate;
+        return $this;
+    }
 
+    // ✅ Getter et Setter pour isPublished
+    public function isPublished(): bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
         return $this;
     }
 
@@ -80,7 +93,6 @@ class Announcement
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
-
         return $this;
     }
 
@@ -92,7 +104,6 @@ class Announcement
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 }

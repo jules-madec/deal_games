@@ -20,12 +20,9 @@ class AnnouncementType extends AbstractType
             ->add('publicationDate')
             ->add('category', EntityType::class, [
                 'class' => Category::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+
         ;
     }
 
