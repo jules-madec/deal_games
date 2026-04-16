@@ -30,9 +30,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $adress = null;
-
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
@@ -51,6 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->announcements = new ArrayCollection();
+        $this->registrationDate = new \DateTime();
     }
 
     // ---- UserInterface ----
@@ -115,17 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-        return $this;
-    }
-
-    public function getAdress(): ?string
-    {
-        return $this->adress;
-    }
-
-    public function setAdress(string $adress): static
-    {
-        $this->adress = $adress;
         return $this;
     }
 

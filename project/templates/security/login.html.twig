@@ -3,32 +3,195 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+<style>
+    .dg-auth-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        position: relative;
+    }
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
-            </div>
-        {% endif %}
+    .dg-auth-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+    .dg-auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dg-auth-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-auth-card form {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .dg-auth-card h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .dg-auth-card .alert-danger {
+        background: rgba(248, 113, 113, 0.08);
+        border: 1px solid rgba(248, 113, 113, 0.25);
+        border-radius: 10px;
+        color: #f87171;
+        padding: 10px 14px;
+        font-size: 0.88rem;
+    }
+
+    .dg-auth-card .mb-3 {
+        background: rgba(34, 211, 238, 0.06);
+        border: 1px solid rgba(34, 211, 238, 0.15);
+        border-radius: 10px;
+        color: #22d3ee;
+        padding: 10px 14px;
+        font-size: 0.88rem;
+    }
+
+    .dg-auth-card .mb-3 a {
+        color: #a855f7;
+        text-decoration: none;
+    }
+
+    .dg-auth-card label {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #4040a0;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .dg-auth-card input[type="email"],
+    .dg-auth-card input[type="password"] {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(100, 220, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #e0e0f0;
+        font-size: 0.93rem;
+        outline: none;
+        transition: border-color 0.2s ease, background 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .dg-auth-card input:focus {
+        border-color: rgba(34, 211, 238, 0.4);
+        background: rgba(34, 211, 238, 0.04);
+    }
+
+    .dg-auth-card .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .dg-auth-card .checkbox label {
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 0.88rem;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+
+    .dg-auth-card input[type="checkbox"] {
+        accent-color: #a855f7;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+    }
+
+    .dg-auth-card button[type="submit"] {
+        width: 100%;
+        padding: 11px;
+        border-radius: 10px;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 0.4rem;
+    }
+
+    .dg-auth-card button[type="submit"]:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+</style>
+
+<div class="dg-auth-wrapper">
+    <div class="dg-auth-card">
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+                </div>
+            {% endif %}
+
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <label for="username">Email</label>
+            <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+            <label for="password">Password</label>
+            <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
             <div class="checkbox mb-3">
                 <input type="checkbox" name="_remember_me" id="_remember_me">
                 <label for="_remember_me">Remember me</label>
             </div>
-        
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+            <button class="btn btn-lg btn-primary" type="submit">
+                Sign in
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

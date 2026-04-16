@@ -1,11 +1,214 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Announcement{% endblock %}
+{% block title %}DealGames - Nouvelle annonce{% endblock %}
 
 {% block body %}
-    <h1>Create new Announcement</h1>
+<style>
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
 
-    {{ include('announcement/_form.html.twig') }}
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
 
-    <a href="{{ path('app_announcement_index') }}">back to list</a>
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-hero p {
+        color: #6060a0;
+        font-size: 1rem;
+    }
+
+    .dg-main {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-form-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 16px;
+        padding: 2rem 2.2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dg-form-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    /* ── FORM FIELDS ── */
+    .dg-form-card label {
+        display: block;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #6060a0;
+        margin-bottom: 6px;
+    }
+
+    .dg-form-card input[type="text"],
+    .dg-form-card input[type="number"],
+    .dg-form-card input[type="date"],
+    .dg-form-card input[type="datetime-local"],
+    .dg-form-card textarea,
+    .dg-form-card select {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(100, 220, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #e0e0f0;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.95rem;
+        transition: border-color 0.2s ease, background 0.2s ease;
+        outline: none;
+        margin-bottom: 1.2rem;
+    }
+
+    .dg-form-card input:focus,
+    .dg-form-card textarea:focus,
+    .dg-form-card select:focus {
+        border-color: rgba(34, 211, 238, 0.4);
+        background: rgba(34, 211, 238, 0.04);
+    }
+
+    .dg-form-card textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .dg-form-card input[type="checkbox"] {
+        accent-color: #22d3ee;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+        cursor: pointer;
+    }
+
+    .dg-form-card .form-check {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+    }
+
+    .dg-form-card .form-check label {
+        margin-bottom: 0;
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 0.9rem;
+        color: #8080b0;
+        cursor: pointer;
+    }
+
+    /* ── ERRORS ── */
+    .dg-form-card .form-error,
+    .dg-form-card ul.form-error,
+    .dg-form-card .invalid-feedback {
+        color: #f87171;
+        font-size: 0.82rem;
+        margin-top: -0.8rem;
+        margin-bottom: 1rem;
+        list-style: none;
+        padding: 0;
+    }
+
+    /* ── BUTTONS ── */
+    .dg-form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dg-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 24px;
+        border-radius: 10px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .dg-btn-primary {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(34, 211, 238, 0.25));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+
+    .dg-btn-primary:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.4), rgba(34, 211, 238, 0.4));
+        border-color: rgba(34, 211, 238, 0.6);
+        color: #fff;
+    }
+
+    .dg-btn-ghost {
+        background: transparent;
+        color: #6060a0;
+        border: 1px solid rgba(100, 100, 200, 0.15);
+    }
+
+    .dg-btn-ghost:hover {
+        color: #a0a0c0;
+        border-color: rgba(100, 100, 200, 0.35);
+        background: rgba(100, 100, 200, 0.06);
+    }
+</style>
+
+<div class="dg-hero">
+    <h1>Nouvelle annonce</h1>
+    <p>Remplissez les informations de votre publication</p>
+</div>
+
+<main class="dg-main">
+    <div class="dg-form-card">
+        {{ include('announcement/_form.html.twig') }}
+
+        <div class="dg-form-actions">
+            <a href="{{ path('app_announcement_index') }}" class="dg-btn dg-btn-ghost">
+                Retour à la liste
+            </a>
+        </div>
+    </div>
+</main>
+
 {% endblock %}

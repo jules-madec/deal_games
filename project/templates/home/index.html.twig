@@ -1,22 +1,251 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}DealGames - Accueil{% endblock %}
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #0a0a0f;
+        color: #e0e0f0;
+        font-family: 'Nunito', sans-serif;
+        min-height: 100vh;
+    }
+
+    
+
+    /* ── HERO BANNER ── */
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-hero p {
+        color: #6060a0;
+        font-size: 1rem;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .dg-main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-section-title {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #6060a0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dg-section-title::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(100, 220, 255, 0.2), transparent);
+    }
+
+    /* ── ANNOUNCEMENT CARDS ── */
+    .dg-announcements {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .dg-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 14px;
+        padding: 1.4rem 1.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dg-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-card:hover {
+        border-color: rgba(34, 211, 238, 0.3);
+        background: rgba(34, 211, 238, 0.04);
+        transform: translateY(-2px);
+    }
+
+    .dg-card-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .dg-card h2 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #e0e0f0;
+        letter-spacing: 0.3px;
+    }
+
+    .dg-card-date {
+        font-size: 0.78rem;
+        color: #4040a0;
+        background: rgba(100, 100, 200, 0.1);
+        padding: 3px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border: 1px solid rgba(100, 100, 200, 0.15);
+    }
+
+    .dg-card p {
+        color: #8080b0;
+        font-size: 0.93rem;
+        line-height: 1.65;
+    }
+
+    .dg-card-footer {
+        margin-top: 0.2rem;
+    }
+
+    .dg-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 18px;
+        border-radius: 8px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(34, 211, 238, 0.15));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.2);
+        transition: all 0.2s ease;
+    }
+
+    .dg-btn:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(34, 211, 238, 0.3));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+
+    /* ── EMPTY STATE ── */
+    .dg-empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #4040a0;
+    }
+
+    .dg-empty-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.4;
+    }
+
+    .dg-empty p {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+        .dg-navbar {
+            padding: 0 1rem;
+        }
+        .dg-nav-links a span.nav-label {
+            display: none;
+        }
+        .dg-hero h1 {
+            font-size: 1.6rem;
+        }
+    }
 </style>
 
 
-{% for announcement in announcements %}
-    <div>
-        <h2>{{ announcement.tittitle }}</h2>
-        <p>{{ announcement.description }}</p>
-        <small>Publié le {{ announcement.publicationDate|date('d/m/Y') }}</small>
-        <a href="{{ path('app_announcement_show', {'id': announcement.id}) }}">Voir plus</a>
+
+{# ── HERO ── #}
+<div class="dg-hero">
+    <h1>Dernières annonces</h1>
+    <p>Les meilleures deals gaming du moment</p>
+</div>
+
+{# ── CONTENT ── #}
+<main class="dg-main">
+    <p class="dg-section-title">Publications récentes</p>
+
+    <div class="dg-announcements">
+        {% for announcement in announcements %}
+            <div class="dg-card">
+                <div class="dg-card-header">
+                    <h2>{{ announcement.tittitle }}</h2>
+                    <span class="dg-card-date">{{ announcement.publicationDate|date('d/m/Y') }}</span>
+                </div>
+                <p>{{ announcement.description }}</p>
+                <div class="dg-card-footer">
+                    <a href="{{ path('app_announcement_show', {'id': announcement.id}) }}" class="dg-btn">
+                        Voir plus →
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="dg-empty">
+                <p>Aucune annonce publiée pour le moment.</p>
+            </div>
+        {% endfor %}
     </div>
-{% else %}
-    <p>Aucune annonce publiée pour le moment.</p>
-{% endfor %}
+</main>
+
 {% endblock %}

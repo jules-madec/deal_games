@@ -3,18 +3,155 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+<style>
+    .dg-auth-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        position: relative;
+    }
 
-    {{ form_errors(registrationForm) }}
+    .dg-auth-wrapper::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.firstName, { label: 'Prénom' }) }}
-        {{ form_row(registrationForm.lastName, { label: 'Nom' }) }}
-        {{ form_row(registrationForm.email, { label: 'Email' }) }}
-        {{ form_row(registrationForm.adress, { label: 'Adresse' }) }}
-        {{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+    .dg-auth-card {
+        width: 100%;
+        max-width: 480px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        padding: 2rem;
+    }
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+    .dg-auth-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-auth-card h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .dg-auth-card label {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #4040a0;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .dg-auth-card input[type="text"],
+    .dg-auth-card input[type="email"],
+    .dg-auth-card input[type="password"] {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(100, 220, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #e0e0f0;
+        font-size: 0.93rem;
+        outline: none;
+        transition: border-color 0.2s ease, background 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+    }
+
+    .dg-auth-card input:focus {
+        border-color: rgba(34, 211, 238, 0.4);
+        background: rgba(34, 211, 238, 0.04);
+    }
+
+    .dg-auth-card input[type="checkbox"] {
+        accent-color: #a855f7;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+        margin-right: 0.5rem;
+    }
+
+    .dg-auth-card .form-check {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .dg-auth-card .form-check label {
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 0.88rem;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+
+    .dg-auth-card button[type="submit"] {
+        width: 100%;
+        padding: 11px;
+        border-radius: 10px;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 0.4rem;
+    }
+
+    .dg-auth-card button[type="submit"]:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+</style>
+
+<div class="dg-auth-wrapper">
+    <div class="dg-auth-card">
+        <h1>Register</h1>
+
+        {{ form_errors(registrationForm) }}
+
+        {{ form_start(registrationForm) }}
+            {{ form_row(registrationForm.firstName, { label: 'Prénom' }) }}
+            {{ form_row(registrationForm.lastName, { label: 'Nom' }) }}
+            {{ form_row(registrationForm.email, { label: 'Email' }) }}
+            {{ form_row(registrationForm.plainPassword, { label: 'Mot de passe' }) }}
+            {{ form_row(registrationForm.agreeTerms) }}
+
+            <button type="submit" class="btn">Register</button>
+        {{ form_end(registrationForm) }}
+    </div>
+</div>
 {% endblock %}

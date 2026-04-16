@@ -1,54 +1,355 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Announcement index{% endblock %}
+{% block title %}DealGames - Mes publications{% endblock %}
 
 {% block body %}
-    <h1>Announcement index</h1>
+<style>
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Description</th>
-                <th>Date de publication</th>
-                <th>Statut</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for announcement in announcements %}
-            <tr>
-                <td>{{ announcement.id }}</td>
-                <td>{{ announcement.tittitle }}</td>
-                <td>{{ announcement.description }}</td>
-                <td>{{ announcement.publicationDate ? announcement.publicationDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    {% if announcement.isPublished %}
-                        <span > Publié</span>
-                    {% else %}
-                        <span > Brouillon</span>
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_announcement_show', {'id': announcement.id}) }}">show</a>
-                    <a href="{{ path('app_announcement_edit', {'id': announcement.id}) }}">edit</a>
-                    <form method="post" action="{{ path('app_announcement_publish', {'id': announcement.id}) }}" style="display:inline;">
-                        <input type="hidden" name="_token" value="{{ csrf_token('publish' ~ announcement.id) }}">
-                        <button type="submit">
-                            {{ announcement.isPublished ? 'Dépublier' : 'Publier' }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
 
-    <a href="{{ path('app_announcement_new') }}">Create new</a>
-    <a href="/">home</a>
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-hero p {
+        color: #6060a0;
+        font-size: 1rem;
+    }
+
+    .dg-main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .dg-section-title {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #6060a0;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dg-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+    }
+
+    .dg-btn-primary {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+    }
+
+    .dg-btn-primary:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+
+    .dg-btn-ghost {
+        background: transparent;
+        color: #6060a0;
+        border: 1px solid rgba(100, 100, 200, 0.15);
+        font-size: 0.85rem;
+        padding: 6px 14px;
+    }
+
+    .dg-btn-ghost:hover {
+        color: #a0a0c0;
+        border-color: rgba(100, 100, 200, 0.35);
+        background: rgba(100, 100, 200, 0.06);
+    }
+
+    .dg-btn-publish {
+        background: rgba(163, 230, 53, 0.1);
+        color: #a3e635;
+        border: 1px solid rgba(163, 230, 53, 0.2);
+        font-size: 0.82rem;
+        padding: 5px 12px;
+    }
+
+    .dg-btn-publish:hover {
+        background: rgba(163, 230, 53, 0.2);
+        border-color: rgba(163, 230, 53, 0.4);
+    }
+
+    .dg-btn-unpublish {
+        background: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+        font-size: 0.82rem;
+        padding: 5px 12px;
+    }
+
+    .dg-btn-unpublish:hover {
+        background: rgba(168, 85, 247, 0.2);
+        border-color: rgba(168, 85, 247, 0.4);
+    }
+
+    /* ── TABLE ── */
+    .dg-table-wrapper {
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .dg-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+    }
+
+    .dg-table thead tr {
+        background: rgba(34, 211, 238, 0.05);
+        border-bottom: 1px solid rgba(100, 220, 255, 0.1);
+    }
+
+    .dg-table thead th {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #4040a0;
+        padding: 14px 16px;
+        text-align: left;
+    }
+
+    .dg-table tbody tr {
+        border-bottom: 1px solid rgba(100, 220, 255, 0.06);
+        transition: background 0.2s ease;
+    }
+
+    .dg-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .dg-table tbody tr:hover {
+        background: rgba(34, 211, 238, 0.03);
+    }
+
+    .dg-table td {
+        padding: 14px 16px;
+        color: #8080b0;
+        vertical-align: middle;
+    }
+
+    .dg-table td.td-title {
+        color: #e0e0f0;
+        font-weight: 600;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1rem;
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .dg-table td.td-desc {
+        max-width: 250px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #6060a0;
+        font-size: 0.87rem;
+    }
+
+    .dg-table td.td-id {
+        color: #3030a0;
+        font-size: 0.8rem;
+        font-family: monospace;
+    }
+
+    .dg-table td.td-date {
+        white-space: nowrap;
+        font-size: 0.83rem;
+    }
+
+    .dg-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    /* ── BADGE STATUT ── */
+    .dg-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+
+    .dg-badge-published {
+        background: rgba(163, 230, 53, 0.1);
+        color: #a3e635;
+        border: 1px solid rgba(163, 230, 53, 0.2);
+    }
+
+    .dg-badge-draft {
+        background: rgba(100, 100, 200, 0.1);
+        color: #6060c0;
+        border: 1px solid rgba(100, 100, 200, 0.15);
+    }
+
+    .dg-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    /* ── EMPTY ── */
+    .dg-empty-row td {
+        text-align: center;
+        padding: 4rem 2rem !important;
+        color: #4040a0;
+    }
+
+    .dg-empty-row .dg-empty-icon {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.8rem;
+        opacity: 0.4;
+    }
+
+    .dg-empty-row p {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.05rem;
+        letter-spacing: 0.5px;
+    }
+
+    @media (max-width: 700px) {
+        .dg-table td.td-desc,
+        .dg-table td.td-id,
+        .dg-table thead th:nth-child(1),
+        .dg-table td:nth-child(1) {
+            display: none;
+        }
+    }
+</style>
+
+<div class="dg-hero">
+    <h1>Mes publications</h1>
+    <p>Gérez et suivez toutes vos annonces</p>
+</div>
+
+<main class="dg-main">
+    <div class="dg-topbar">
+        <span class="dg-section-title">Toutes les annonces</span>
+        <a href="{{ path('app_announcement_new') }}" class="dg-btn dg-btn-primary">
+            + Nouvelle annonce
+        </a>
+    </div>
+
+    <div class="dg-table-wrapper">
+        <table class="dg-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Titre</th>
+                    <th>Description</th>
+                    <th>Date de publication</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for announcement in announcements %}
+                <tr>
+                    <td class="td-id">#{{ announcement.id }}</td>
+                    <td class="td-title">{{ announcement.tittitle }}</td>
+                    <td class="td-desc">{{ announcement.description }}</td>
+                    <td class="td-date">
+                        {{ announcement.publicationDate ? announcement.publicationDate|date('d/m/Y') : '—' }}
+                    </td>
+                    <td>
+                        {% if announcement.isPublished %}
+                            <span class="dg-badge dg-badge-published">
+                                <span class="dg-badge-dot"></span> Publié
+                            </span>
+                        {% else %}
+                            <span class="dg-badge dg-badge-draft">
+                                <span class="dg-badge-dot"></span> Brouillon
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="dg-actions">
+                            <a href="{{ path('app_announcement_show', {'id': announcement.id}) }}" class="dg-btn dg-btn-ghost">Voir</a>
+                            <a href="{{ path('app_announcement_edit', {'id': announcement.id}) }}" class="dg-btn dg-btn-ghost">Éditer</a>
+                            <form method="post" action="{{ path('app_announcement_publish', {'id': announcement.id}) }}" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('publish' ~ announcement.id) }}">
+                                <button type="submit" class="dg-btn {{ announcement.isPublished ? 'dg-btn-unpublish' : 'dg-btn-publish' }}">
+                                    {{ announcement.isPublished ? 'Dépublier' : 'Publier' }}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="dg-empty-row">
+                    <td colspan="6">
+                        <p>Aucune annonce pour le moment.</p>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
 {% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+<style>
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-table-wrapper {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dg-table-wrapper::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .dg-table thead tr {
+        border-bottom: 1px solid rgba(100, 220, 255, 0.1);
+    }
+
+    .dg-table th {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #3030a0;
+        padding: 14px 20px;
+        text-align: left;
+    }
+
+    .dg-table td {
+        padding: 13px 20px;
+        color: #a0a0c0;
+        font-size: 0.93rem;
+        border-bottom: 1px solid rgba(100, 220, 255, 0.06);
+        word-break: break-all;
+    }
+
+    .dg-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .dg-table tbody tr:hover td {
+        background: rgba(34, 211, 238, 0.03);
+    }
+
+    .dg-table .dg-empty {
+        text-align: center;
+        color: #4040a0;
+        font-style: italic;
+        padding: 2rem;
+    }
+
+    .dg-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dg-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border-radius: 10px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .dg-btn-primary {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+    }
+
+    .dg-btn-primary:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+
+    .dg-btn-secondary {
+        background: rgba(168, 85, 247, 0.08);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .dg-btn-secondary:hover {
+        background: rgba(168, 85, 247, 0.18);
+        border-color: rgba(168, 85, 247, 0.4);
+        color: #fff;
+    }
+
+    .dg-btn-new {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        margin-top: 1.5rem;
+        padding: 9px 22px;
+        font-size: 0.95rem;
+    }
+
+    .dg-btn-new:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+</style>
+
+<div class="dg-hero">
+    <h1>User index</h1>
+</div>
+
+<main class="dg-main">
+
+    <div class="dg-table-wrapper">
+        <table class="dg-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>LastName</th>
+                    <th>FirstName</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>RegistrationDate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                    <td>{{ user.registrationDate ? user.registrationDate|date('Y-m-d') : '' }}</td>
+                    <td>
+                        <div class="dg-actions">
+                            <a href="{{ path('app_user_show', {'id': user.id}) }}" class="dg-btn dg-btn-primary">show</a>
+                            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="dg-btn dg-btn-secondary">edit</a>
+                        </div>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9" class="dg-empty">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{{ path('app_user_new') }}" class="dg-btn dg-btn-new">+ Create new</a>
+
+</main>
+{% endblock %}

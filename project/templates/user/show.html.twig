@@ -1,0 +1,197 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User{% endblock %}
+
+{% block body %}
+<style>
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-main {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-profile-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dg-profile-card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-profile-section-title {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #3030a0;
+        padding: 14px 20px 10px;
+        border-bottom: 1px solid rgba(100, 220, 255, 0.06);
+    }
+
+    .dg-profile-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(100, 220, 255, 0.06);
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .dg-profile-row:last-child {
+        border-bottom: none;
+    }
+
+    .dg-profile-label {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #4040a0;
+        min-width: 120px;
+        flex-shrink: 0;
+    }
+
+    .dg-profile-value {
+        color: #a0a0c0;
+        font-size: 0.93rem;
+        text-align: right;
+        word-break: break-all;
+    }
+
+    .dg-form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dg-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 22px;
+        border-radius: 10px;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+    }
+
+    .dg-btn-primary {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+    }
+
+    .dg-btn-primary:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+
+    .dg-btn-danger {
+        background: rgba(248, 113, 113, 0.08);
+        color: #f87171;
+        border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+
+    .dg-btn-danger:hover {
+        background: rgba(248, 113, 113, 0.18);
+        border-color: rgba(248, 113, 113, 0.4);
+    }
+</style>
+
+<div class="dg-hero">
+    <h1>User</h1>
+</div>
+
+<main class="dg-main">
+
+    <div class="dg-profile-card">
+        <div class="dg-profile-section-title">Informations</div>
+
+        
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">LastName</span>
+            <span class="dg-profile-value">{{ user.lastName }}</span>
+        </div>
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">FirstName</span>
+            <span class="dg-profile-value">{{ user.firstName }}</span>
+        </div>
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">Email</span>
+            <span class="dg-profile-value">{{ user.email }}</span>
+        </div>
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">Password</span>
+            <span class="dg-profile-value">{{ user.password }}</span>
+        </div>
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">Roles</span>
+            <span class="dg-profile-value">{{ user.roles ? user.roles|json_encode : '' }}</span>
+        </div>
+        <div class="dg-profile-row">
+            <span class="dg-profile-label">RegistrationDate</span>
+            <span class="dg-profile-value">{{ user.registrationDate ? user.registrationDate|date('Y-m-d') : '' }}</span>
+        </div>
+    </div>
+
+    <div class="dg-form-actions">
+        
+        <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="dg-btn dg-btn-primary">edit</a>
+        <span class="dg-btn dg-btn-danger">{{ include('user/_delete_form.html.twig') }}</span>
+    </div>
+
+</main>
+{% endblock %}

@@ -18,8 +18,11 @@ final class AnnouncementController extends AbstractController
     #[Route(name: 'app_announcement_index', methods: ['GET'])]
     public function index(AnnouncementRepository $announcementRepository): Response
     {
+        $user = $this->getUser();
         return $this->render('announcement/index.html.twig', [
-            'announcements' => $announcementRepository->findAll(),
+            'announcements' => $announcementRepository->findBy([
+                'user' => $user
+            ]),
         ]);
     }
 
@@ -71,7 +74,7 @@ final class AnnouncementController extends AbstractController
         ]);
     }
 
-    // ✅ Nouvelle route publish
+
     #[Route('/{id}/publish', name: 'app_announcement_publish', methods: ['POST'])]
     public function publish(Request $request, Announcement $announcement, EntityManagerInterface $entityManager): Response
     {
