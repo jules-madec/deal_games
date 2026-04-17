@@ -23,7 +23,7 @@ class Announcement
     #[ORM\Column]
     private ?\DateTime $publicationDate = null;
 
-    // ✅ Nouveau champ
+
     #[ORM\Column(type: 'boolean')]
     private bool $isPublished = false;
 
@@ -34,6 +34,10 @@ class Announcement
     #[ORM\ManyToOne(inversedBy: 'announcements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+    public function __construct()
+    {
+        $this->publicationDate = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -73,7 +77,7 @@ class Announcement
         return $this;
     }
 
-    // ✅ Getter et Setter pour isPublished
+
     public function isPublished(): bool
     {
         return $this->isPublished;

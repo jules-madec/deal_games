@@ -3,11 +3,145 @@
 {% block title %}Edit Announcement{% endblock %}
 
 {% block body %}
-    <h1>Edit Announcement</h1>
+<style>
+    .dg-hero {
+        text-align: center;
+        padding: 3.5rem 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
 
+    .dg-hero::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(ellipse, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .dg-hero h1 {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(90deg, #a855f7, #22d3ee, #a3e635);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+
+    .dg-main {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 1.5rem 4rem;
+    }
+
+    .dg-main label {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #4040a0;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .dg-main input[type="text"],
+    .dg-main input[type="email"],
+    .dg-main input[type="number"],
+    .dg-main input[type="date"],
+    .dg-main input[type="datetime-local"],
+    .dg-main textarea,
+    .dg-main select {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(100, 220, 255, 0.12);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #e0e0f0;
+        font-size: 0.93rem;
+        outline: none;
+        transition: border-color 0.2s ease, background 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+    }
+
+    .dg-main input:focus,
+    .dg-main textarea:focus,
+    .dg-main select:focus {
+        border-color: rgba(34, 211, 238, 0.4);
+        background: rgba(34, 211, 238, 0.04);
+    }
+
+    .dg-main button[type="submit"],
+    .dg-main input[type="submit"] {
+        padding: 9px 22px;
+        border-radius: 10px;
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(34, 211, 238, 0.2));
+        color: #22d3ee;
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 0.4rem;
+    }
+
+    .dg-main button[type="submit"]:hover,
+    .dg-main input[type="submit"]:hover {
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.35));
+        border-color: rgba(34, 211, 238, 0.5);
+        color: #fff;
+    }
+
+    .dg-main form {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(100, 220, 255, 0.1);
+        border-radius: 16px;
+        padding: 1.8rem 2rem;
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .dg-main form::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #a855f7, #22d3ee);
+        border-radius: 3px 0 0 3px;
+    }
+
+    .dg-main form:last-of-type button[type="submit"] {
+        background: rgba(248, 113, 113, 0.08);
+        color: #f87171;
+        border: 1px solid rgba(248, 113, 113, 0.2);
+    }
+
+    .dg-main form:last-of-type button[type="submit"]:hover {
+        background: rgba(248, 113, 113, 0.18);
+        border-color: rgba(248, 113, 113, 0.4);
+        color: #fff;
+    }
+</style>
+
+<div class="dg-hero">
+    <h1>Edit Announcement</h1>
+</div>
+
+<main class="dg-main">
     {{ include('announcement/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_announcement_index') }}">back to list</a>
-
     {{ include('announcement/_delete_form.html.twig') }}
+</main>
 {% endblock %}
